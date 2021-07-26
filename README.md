@@ -35,4 +35,4 @@ go run main.go
 
 ## LICENSE 📝
 
-This project is currently licensed under the [MIT License]("https://github.com/niloysikdar/Go-IMDb-Crawler/blob/main/LICENSE").
+This project is currently licensed under under the **MIT License**. See [LICENSE](https://github.com/niloysikdar/Go-IMDb-Crawler/blob/main/LICENSE) for more information.
