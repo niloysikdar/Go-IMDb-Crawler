@@ -38,7 +38,7 @@ func main() {
 	fmt.Scanln(&month)
 
 	// Getting user input for Day
-	fmt.Println("Enter the Day code :")
+	fmt.Println("Enter the Day :")
 	var day int
 	fmt.Scanln(&day)
 
