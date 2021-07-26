@@ -19,11 +19,11 @@ Want to know which celebrities have a common birthday with yours? 👀 Want to g
 
 - So here is the **Go IMDb Crawler**.
 - Just input the **Day** and **Month** and get all the relevant data about the celebrities who have the same birthday.
-- Using [Golang]("https://golang.org/") + [Colly]("http://go-colly.org/") to get the data from [IMDb]("https://www.imdb.com/").
+- Using [Golang](https://golang.org/) + [Colly](http://go-colly.org/) to get the data from [IMDb](https://www.imdb.com/).
 
 ## RUNNING 🏃
 
-- To run the crawler, **Go** is needed to be installed. Install **Go** from [here]("https://golang.org/dl/)
+- To run the crawler, **Go** is needed to be installed. Install **Go** from [here](https://golang.org/dl/)
 
 - After Installing Go, run
 
