@@ -94,6 +94,7 @@ func crawl(month int, day int, numberOfProfile int) {
 		tempProfile.Image = h.ChildAttr("#name-poster", "src")
 		tempProfile.Title = h.ChildText("#name-job-categories > a > span.itemprop")
 		tempProfile.Bio = strings.TrimSpace(h.ChildText("#name-bio-text > div.name-trivia-bio-text > div.inline"))
+		tempProfile.Bio = strings.TrimSpace(strings.ReplaceAll(tempProfile.Bio, "See full bio »", ""))
 		tempProfile.BirthDate = h.ChildAttr("#name-born-info time", "datetime")
 
 		h.ForEach("div.knownfor-title", func(i int, m *colly.HTMLElement) {
