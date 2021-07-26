@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -28,17 +27,30 @@ type movie struct {
 }
 
 func main() {
-	month := flag.Int("month", 7, "Month to fetch")
-	day := flag.Int("day", 3, "Day to fetch")
-	numberOfProfile := flag.Int("numberOfProfile", 2, "Number of profiles to fetch")
-	flag.Parse()
+	fmt.Println("Enter the Month code (Eg. 1 for Jan) :")
+	var month int
+	fmt.Scanln(&month)
+
+	fmt.Println("Enter the Day code :")
+	var day int
+	fmt.Scanln(&day)
+
+	fmt.Println("Number of profiles to fetch (Default is 5) :")
+	var numberOfProfile int
+	fmt.Scanln(&numberOfProfile)
+
 	fmt.Println("Started to crawl data ....")
-	crawl(*month, *day, *numberOfProfile)
+
+	crawl(month, day, numberOfProfile)
 }
 
 func crawl(month int, day int, numberOfProfile int) {
 	finalData := []profile{}
 	count := 0
+
+	if numberOfProfile == 0 {
+		numberOfProfile = 5
+	}
 
 	collector := colly.NewCollector(
 		colly.AllowedDomains("www.imdb.com", "imdb.com"),
