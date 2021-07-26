@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -28,12 +29,17 @@ type movie struct {
 func main() {
 	month := flag.Int("month", 7, "Month to fetch")
 	day := flag.Int("day", 30, "Day to fetch")
+	numberOfProfile := flag.Int("numberOfProfile", 2, "Number of profiles to fetch")
 	flag.Parse()
-	crawl(*month, *day)
-	fmt.Println("Hello World")
+	fmt.Println("Started to crawl data ....")
+	crawl(*month, *day, *numberOfProfile)
+	fmt.Println("Crawling has ended !")
 }
 
-func crawl(month int, day int) {
+func crawl(month int, day int, numberOfProfile int) {
+	finalData := []profile{}
+	count := 0
+
 	collector := colly.NewCollector(
 		colly.AllowedDomains("www.imdb.com", "imdb.com"),
 	)
@@ -44,18 +50,17 @@ func crawl(month int, day int) {
 		profileURL := h.ChildAttr("div.lister-item-image > a", "href")
 		profileURL = h.Request.AbsoluteURL(profileURL)
 
-		infoCollector.Visit(profileURL)
-	})
+		if count < numberOfProfile {
+			infoCollector.Visit(profileURL)
+		}
 
-	collector.OnHTML("a.lister-page-next", func(h *colly.HTMLElement) {
-		nextPage := h.Request.AbsoluteURL(h.Attr("href"))
-		collector.Visit(nextPage)
 	})
 
 	infoCollector.OnHTML("#content-2-wide", func(h *colly.HTMLElement) {
 		tempProfile := profile{}
 		tempProfile.Name = h.ChildText("h1.header > span.itemprop")
-		fmt.Println("Getting data for: ", tempProfile.Name)
+		count++
+		fmt.Println(strconv.Itoa(count), "> Getting data for: ", tempProfile.Name)
 		tempProfile.Image = h.ChildAttr("#name-poster", "src")
 		tempProfile.Title = h.ChildText("#name-job-categories > a > span.itemprop")
 		tempProfile.Bio = strings.TrimSpace(h.ChildText("#name-bio-text > div.name-trivia-bio-text > div.inline"))
@@ -70,11 +75,8 @@ func crawl(month int, day int) {
 			tempProfile.TopMovies = append(tempProfile.TopMovies, tempMovie)
 		})
 
-		jsonRes, err := json.MarshalIndent(tempProfile, "", "    ")
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(string(jsonRes))
+		finalData = append(finalData, tempProfile)
+
 	})
 
 	// collector.OnRequest(func(r *colly.Request) {
@@ -87,4 +89,11 @@ func crawl(month int, day int) {
 
 	baseurl := fmt.Sprintf("https://www.imdb.com/search/name/?birth_monthday=%d-%d", month, day)
 	collector.Visit(baseurl)
+
+	jsonRes, err := json.MarshalIndent(finalData, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(jsonRes))
+
 }
