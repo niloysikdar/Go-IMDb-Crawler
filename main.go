@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 
@@ -28,12 +29,11 @@ type movie struct {
 
 func main() {
 	month := flag.Int("month", 7, "Month to fetch")
-	day := flag.Int("day", 30, "Day to fetch")
+	day := flag.Int("day", 3, "Day to fetch")
 	numberOfProfile := flag.Int("numberOfProfile", 2, "Number of profiles to fetch")
 	flag.Parse()
 	fmt.Println("Started to crawl data ....")
 	crawl(*month, *day, *numberOfProfile)
-	fmt.Println("Crawling has ended !")
 }
 
 func crawl(month int, day int, numberOfProfile int) {
@@ -94,6 +94,30 @@ func crawl(month int, day int, numberOfProfile int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(jsonRes))
+	// fmt.Println(string(jsonRes))
 
+	fileName := fmt.Sprintf("%d-%ddata.json", month, day)
+
+	writeFile(fileName, string(jsonRes))
+
+	fmt.Println("Done !")
+
+}
+
+func writeFile(fileName string, data string) {
+	f, openerr := os.Create(fileName)
+
+	if openerr != nil {
+		log.Fatal(openerr)
+	}
+
+	defer f.Close()
+
+	_, err2 := f.WriteString(data)
+
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+
+	fmt.Println("Writing file:", fileName)
 }
